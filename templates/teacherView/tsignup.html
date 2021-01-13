@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BADOTS</title>
+
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+      html,
+        body {
+          height: 100%;
+        }
+
+        body {
+          display: flex;
+          align-items: center;
+          padding-top: 40px;
+          padding-bottom: 40px;
+          background-color: #00D1B2;
+        }
+
+        .form-signin {
+          width: 100%;
+          max-width: 330px;
+          padding: 15px;
+          margin: auto;
+        }
+        .form-signin .checkbox {
+          font-weight: 400;
+        }
+        .form-signin .form-control {
+          position: relative;
+          box-sizing: border-box;
+          height: auto;
+          padding: 10px;
+          font-size: 16px;
+        }
+        .form-signin .form-control:focus {
+          z-index: 2;
+        }
+        .form-signin input[type="email"] {
+          margin-bottom: -1px;
+
+        }
+        .form-signin input[type="password"] {
+          margin-bottom: 10px;
+
+        }
+        .assabastir{
+            margin-top:10px;
+            margin-left:10px
+        }
+        .margin50{
+            padding-right:35px;
+            min-width: 400px;
+
+        }
+        @media only screen and (max-width: 600px) {
+          .form-signin {
+          margin:40px;
+        }
+        }
+        @media only screen and (max-width: 460px) {
+          .form-signin {
+          margin:-15px;
+        }
+        }
+        .btn-outline-success{
+        border-color:#00D1B2;
+        color:#00D1B2;
+        }
+        .btn-outline-success:hover{
+            background-color: #00D1B2;
+            border-color:#00D1B2;
+        }
+        .yazi-yesil{
+        color: #00D1B2;
+        }
+
+
+
+
+
+
+
+
+    </style>
+</head>
+<body class="text-center">
+
+<main class="form-signin bg-light card margin50 ">
+    <form method="POST">
+        <div class="yazi-yesil">
+            <h1 class="h3 mb-3 fw-normal">Kayıt Bilgileri</h1>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="alert alert-danger" style="margin-left:1rem;">
+                {% for message in messages %}
+                {{ message }}
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+            <input type="name" name="isim" id="name" class="form-control assabastir" placeholder="Ad - Soyad" required
+                   autofocus>
+            <label for="inputEmail" class="visually-hidden">Email address</label>
+            <input type="email" name="email" id="inputEmail" class="form-control assabastir"
+                   placeholder="E-posta Adresi" required
+            >
+
+            <label for="inputPassword" class="visually-hidden">Password</label>
+            <input type="password" name="password" id="inputPassword" class="form-control assabastir"
+                   placeholder="Parola" required>
+            <label for="inputPassword" class="visually-hidden">Password</label>
+            <input type="password" name="password_check" id="inputPasswordCheck" class="form-control"
+                   style="margin-left:10px;" placeholder="Parola Tekrar" required>
+
+            <button class="w-100 btn btn-lg btn-outline-success"
+                    style="padding-left:20px;margin-left:10px;margin-bottom:10px;"
+                    type="submit">
+                Kayıt ol
+            </button>
+
+        </div>
+    </form>
+</main>
+
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
+</body>
+</html>

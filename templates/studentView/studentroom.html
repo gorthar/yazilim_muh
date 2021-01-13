@@ -1,0 +1,40 @@
+{% extends "studentView/smain.html" %}
+
+{% block content %}
+<div class="column is-6 is-offset-3">
+    <div class="fa-3x">
+        <h1>Ödevler</h1>
+    </div>
+    <table class="table is-hoverable  arkaplan has-text-white">
+        <thead>
+
+        <tr>
+            <th>Ödev Adı</th>
+            <th>Ödevin Son Teslim Tarihi</th>
+            <th>Teslim Durumu</th>
+
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr>
+
+            <th>7/A Bilişim Teknolojileri</th>
+            <th>15.05.2021</th>
+            <th class="is-clickable " onclick="window.location='{{ url_for('studentController.submit') }}'"><i
+                    class="far fa-thumbs-up"></i></th>
+
+        </tr>
+        <tr>
+
+            <th>7/A Tarih</th>
+            <th>15.05.2021</th>
+            <th class="is-clickable " onclick="window.location='{{ url_for('studentController.submit') }}'"><i
+                    class="far fa-thumbs-down"></i></th>
+
+        </tr>
+        </tbody>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "teacherView/tmain.html" %}
+{% block content %}
+<div class="d-flex">
+
+    <div class="text-center   card margin50 yazi-yesil" style="width: 100%;
+          max-width: 430px;
+          padding: 15px;
+          margin: auto;
+          margin-top:50px;">
+        <form>
+            <div class="">
+                <h1 class="h3 mb-3 fw-normal ">Hesap Bilgileri</h1>
+
+                <label for="inputEmail" class="visually-hidden">Email address</label>
+                <input type="email" id="inputEmail" class="form-control assabastir" placeholder="E-posta Adresi"
+                       required
+                       autofocus style="margin-bottom:20px;">
+                <label for="inputPassword" class="visually-hidden">Password</label>
+                <input type="password" id="inputPassword" class="form-control assabastir" placeholder="Parola" required
+                       style="margin-bottom:20px;">
+                <label for="inputPasswordCheck" class="visually-hidden">Password</label>
+                <input type="password" id="inputPasswordCheck" class="form-control assabastir" placeholder="Parola Tekrar" required
+                       style="margin-bottom:20px;">
+
+                <button class="w-100 btn btn-lg btn-outline-success" style="" type="submit">
+                    Kaydet
+                </button>
+
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

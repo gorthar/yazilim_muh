@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BADOTS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <style>
+        .is-clickable {
+            cursor: pointer;
+        }
+        .arkaplan{
+            background-color:#209cee;
+
+        }
+        #beyaz{
+            color:white;
+        }
+    </style>
+</head>
+<body>
+<section class="hero is-info is-fullheight">
+
+    <div class="hero-head">
+        <nav class="navbar">
+            <div class="container">
+
+                <div id="navbarMenuHeroA" class="navbar-menu is-active">
+
+                    <div class="navbar-end">
+                        <a href="{{ url_for('studentController.student') }}" class="navbar-item">
+                            Anasayfa</a>
+
+
+                        <a href="{{ url_for('studentController.slogout') }}" class="navbar-item">
+                            Çıkış
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div class="hero-body">
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+</section>
+</body>
+
+</html>
