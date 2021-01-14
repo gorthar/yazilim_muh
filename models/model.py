@@ -81,6 +81,13 @@ class students(db.Model):
     password = db.Column(db.String(20), nullable=False)
 
     def set_student(self):
+        key = ""
+        randomkey = rooms()
+        while True:
+            key = randomkey.create_key()  # 10 karakterli öğrenci giriş kodu oluşturulur
+            if not key == students.query.filter_by(password=key).first():
+                break
+        self.password = key
         db.session.add(self)
         db.session.commit()
 
@@ -134,6 +141,7 @@ class assignments(db.Model):
     assignment_id = db.Column(db.Integer, primary_key=True)
     room_id = db.Column(db.Integer, db.ForeignKey(rooms.room_id), nullable=False)
     message = db.Column(db.String(255), nullable=False)
+    name = db.Column(db.String(255), nullable=True)
     assignment_date = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
     def create_assignment(self):
@@ -181,7 +189,8 @@ class submitted_assignments(db.Model):
 
     @classmethod
     def get_submitted_assignment_by_assignment_and_student(cls, assignment_id, student_id):
-        ogrencinin_odevi = submitted_assignments.query.filter_by(assignment_id=assignment_id, student_id=student_id)
+        ogrencinin_odevi = submitted_assignments.query.filter_by(assignment_id=assignment_id,
+                                                                 student_id=student_id).first()
         if ogrencinin_odevi:
             return ogrencinin_odevi
         else:

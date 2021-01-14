@@ -1,7 +1,7 @@
 {% extends "teacherView/tmain.html" %}
 
 {% block content %}
-<!-- Modal -->
+<!-- Modal Yeni Ödev oluşturma-->
 <div class="modal fade yazi-yesil" id="yeniodev" tabindex="-1" aria-labelledby="yeniodevlabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -9,58 +9,71 @@
                 <h5 class="modal-title" id="yeniodevlabel">Yeni Ödev</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form>
-                <div class="modal-body">
+            <form action="{{url_for('teacherController.createassignment')}}" method="POST" >
+                    <div class="modal-body">
 
-                    <input type="name" id="odevadi" class="form-control yazi-yesil "
-                           placeholder="Ödev adı" required style="margin-bottom:10px;"
-                           autofocus>
-                    <input type="name" id="konu" class="form-control yazi-yesil "
-                           placeholder="Konu" required
-                           autofocus>
+                        <input type="text" name="odevadi" id="name" class="form-control yazi-yesil assabastir"
+                               placeholder="Ödev Adı" required
+                               autofocus>
+                        <input type="text" name="konu" id="topic" class="form-control yazi-yesil assabastir"
+                               placeholder="Odev Konusu"
+                               >
 
-                </div>
-                <div class="modal-footer">
 
-                    <button type="button" class="btn btn-outline-success" type="submit">Kaydet</button>
-                </div>
-            </form>
+                    </div>
+                    <div class="modal-footer">
+
+                        <button  class="btn btn-outline-success" type="submit">Kaydet</button>
+                    </div>
+                </form>
         </div>
     </div>
 </div>
 <div class="d-flex justify-content-center" style="margin-top:50px;">
-    <h1>{{gelen_sinif.room_name}}</h1>
+    <h1>{{gelen_sinif.room_name}}</h1><!-- Sınıf Adı -->
 </div>
 
 <div class="d-flex" style="margin-top:2rem;">
-    <div class="p2 me-auto"><i class="fas fa-school" style="margin-right:0.5rem;"></i>{{ gelen_sinif.generated_address
+    <div class=" me-auto"><i class="fas fa-school" style="margin-right:0.5rem;"></i>Sınıf Kodu:&nbsp;{{
+        gelen_sinif.generated_address<!-- Sınıf Adresi -->
         }}
     </div>
-    <div class="p2 bg-light text-justify rounded" style="padding:5px; margin-right:10px;">
+    <div class=" bg-light text-justify rounded" style="padding:5px; margin-right:10px;">
         <p style="margin-top:1px;margin-bottom:1px;font-size:0.6rem;">
             <a data-bs-toggle="modal" data-bs-target="#yeniodev" href=""><i
                     class="far fa-plus-square fa-2x yazi-yesil">
                 Ödev Oluştur</i></a>
         </p>
     </div>
-    <div class="p2 bg-light text-justify rounded" style="padding:5px; ">
+    <div class=" bg-light text-justify rounded" style="padding:5px;margin-right:10px; ">
         <p style="margin-top:1px;margin-bottom:1px;font-size:0.6rem;">
             <a href=""><i
                     class="far fa-plus-square fa-2x yazi-yesil">
                 Ödev Düzenle</i></a>
         </p>
     </div>
+     <div class=" bg-light text-justify rounded" style="padding:5px; ">
+        <p style="margin-top:1px;margin-bottom:1px;font-size:0.6rem;">
+            <a href=""><i
+                    class="far fa-plus-square fa-2x yazi-yesil">
+                Öğrenci Ekle</i></a>
+        </p>
+    </div>
 
 </div>
 
 
+<!-- Sınıf da bulunan öğrenciler ve ödevlerinin olduğu tablo -->
+
 <div class="d-flex flex-row justify-content-center">
     <div class="table-responsive">
-        <table class="table bg-yesil table-bordered  " style="max-width:800px;margin-top:5rem;color:white;">
+        <table class="table bg-yesil table-bordered  "
+               style="max-width:800px;margin-top:5rem;color:white;min-width:700px;">
             <thead style="">
             <tr>
 
-                <th colspan="1" style="min-width:30px;" scope="col">Adı&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                <th colspan="1" style="min-width:30px;" scope="col">Adı&nbsp;&nbsp;&nbsp;&nbsp;</th>
+
                 <th colspan="300" scope="col">Ödev</th>
             </tr>
             </thead>
@@ -69,51 +82,58 @@
             <tr>
                 {% for r in row %}
                 {% if r["ogradi"] %}
-                <td><a href="#">{{ r["ogradi"] }}</a></td>
+
+                <!-- #### Modal Öğrenci Bilgileri ve Güncelleme ####-->
+                <div id="modaledit{{r['ogrno']}}" class="modal fade  yazi-yesil" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header"><h4 class="modal-title">Öğrenci Bilgileri</h4></div>
+                            <form action="{{url_for('teacherController.room', room_id=session.get('bulunan_oda'))}}"
+                                  method="POST">
+                                <div class="modal-body">
+
+                                    <div class="form-group">
+                                        <label>Öğrenci Adı:</label>
+                                        <input type="hidden" name="id" value="{{r['ogradi']}}">
+                                        <input type="text" class="form-control" name="name" value="{{r['ogradi']}}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Öğrenci Kodu</label>
+                                        <input type="hidden" name="id" value="{{r['ogrpass']}}">
+                                        <input type="text" class="form-control" name="name" value="{{r['ogrpass']}}" disabled>
+                                    </div>
+
+
+
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="form-group">
+                                        <button class="btn btn-outline-success" type="submit">Güncelle</button>
+                                    </div>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <td><a href="" data-bs-toggle="modal" data-bs-target="#modaledit{{r['ogrno']}}">{{ r["ogradi"] }}</a>
+                </td>
+
                 {% else %}
                 <td>
                     {% if r['teslim']=="True" %}
-                    <a class="yazi-beyaz"><i class="fas fa-sun"></i></a></td>
+                    <a class="yazi-beyaz" href="#"><i class="far fa-check-square"></i></a></td>
                 {% else %}
-                <a class="disabled"><i class="fas fa-sun"></i></a></td>
+                <a class="disabled"><i class="far fa-times-circle"></i></a></td>
                 {% endif %}
                 {% endif %}
                 {% endfor %}
+
             </tr>
+
             {% endfor %}
-            <tr>
 
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-            </tr>
-            <tr>
-
-                <td>Larry the Bird</td>
-                <td>@twitter</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-            </tr>
             </tbody>
         </table>
     </div>

@@ -4,7 +4,8 @@ from flask import Blueprint, render_template, request, session, flash, redirect,
 
 teacherController = Blueprint("teacherController", __name__)
 
-from models.model import teacher as teacher_model, rooms as siniflar, enrolled_rooms,assignments,students,submitted_assignments
+from models.model import teacher as teacher_model, rooms as siniflar, enrolled_rooms, assignments, students, \
+    submitted_assignments
 
 
 # Bu fonksiyon sayfaya ulaşılması için login olunmasını gerekli kılmaktadır
@@ -66,7 +67,7 @@ def tsignup():
 @teacherController.route('/teacher', methods=["POST", "GET"])
 @teacher_login_required
 def teacher():
-    if request.method == "POST":
+    if request.method == "POST":  # POST mothodunda öğretmen yeni sınıf oluşturulmakta
         sinif_adi = request.form["sinif_adi"]
         ogretmenin_maili = session["teacher_email"]
         yeni_sinif = siniflar()
@@ -81,35 +82,34 @@ def teacher():
         return render_template("teacherView/teacher.html", ogrtn_rooms=ogretmen_rooms)
 
 
-# @teacherController.route('/room')
-# @teacher_login_required
-# def room():
-#     return render_template("teacherView/room.html")
-
-
 @teacherController.route('/room/<int:room_id>')
 @teacher_login_required
 def room(room_id):
+    session.pop("bulunan_oda", None)
+    session["bulunan_oda"] = room_id
     gelen_sinif = siniflar.get_room(room_id)
-    if gelen_sinif != "Sınıf bulunamadı":                               # sınıfın varlığının kontrolü
-        if session.get("teacher_email") == gelen_sinif.teacher_mail:     # öğretmenin tanımladığı sınf olup olmadığının kontrolü
-            siniftaki_ogrencilerin_idler=enrolled_rooms.get_students_id_from_room_id(room_id)
-            sinifin_odevleri=assignments.get_assignments(room_id)
-            x=0
-            y=0
-            tablo=[]                                                    #öğrencilerin ödevlerinin yapılıp yapılmayacağının listeleneceği tablo
-            for student in siniftaki_ogrencilerin_idler:                #tablonun ilk sütunu öğrenci adı ve numarası
-                ogr= students.get_student(student)
-                ogr_dic={"ogrno":str(ogr.student_id),
-                         "ogradi":ogr.name
-                         }
-                column=[ogr_dic]
-                for odev in sinifin_odevleri:                   
-                    ogrencinin_odevi=submitted_assignments.get_submitted_assignment_by_assignment_and_student(odev.assignment_id,ogr.student_id)
-                    if ogrencinin_odevi!="Öğrenci ödevi teslim etmemiştir.":
-                        ogrencinin_odev_durumu = True                       
+    if gelen_sinif != "Sınıf bulunamadı":  # sınıfın varlığının kontrolü
+        if session.get(
+                "teacher_email") == gelen_sinif.teacher_mail:  # öğretmenin tanımladığı sınf olup olmadığının kontrolü
+            siniftaki_ogrencilerin_idler = enrolled_rooms.get_students_id_from_room_id(room_id)
+            sinifin_odevleri = assignments.get_assignments(room_id)
+            x = 0
+            y = 0
+            tablo = []  # öğrencilerin ödev durumlarının listeleneceği tablo
+            for student in siniftaki_ogrencilerin_idler:  # her satırın ilk hücresi öğrenci adı, id'si ve giriş kodu bilgilerini bulunduran bir dic
+                ogr = students.get_student(student)
+                ogr_dic = {"ogrno": str(ogr.student_id),
+                           "ogradi": ogr.name,
+                           "ogrpass": str(ogr.password)
+                           }
+                column = [ogr_dic]
+                for odev in sinifin_odevleri:
+                    ogrencinin_odevi = submitted_assignments.get_submitted_assignment_by_assignment_and_student(
+                        odev.assignment_id, ogr.student_id)
+                    if ogrencinin_odevi != "Öğrenci ödevi teslim etmemiştir.":
+                        ogrencinin_odev_durumu = True
                     else:
-                        ogrencinin_odev_durumu=False
+                        ogrencinin_odev_durumu = False
 
                     odev_dic = {"ödevno": str(odev.assignment_id),
                                 "teslim": str(ogrencinin_odev_durumu)
@@ -122,14 +122,37 @@ def room(room_id):
     return redirect(url_for("teacherController.teacher"))
 
 
-@teacherController.route('/createroom')
-def createroom():
-    return render_template("teacherView/createroom.html")
+@teacherController.route('/addstudent', methods=["POST"])
+def add_student():
+    sinif_adi = request.form["sinif_adi"]
+    ogretmenin_maili = session["teacher_email"]
+    yeni_sinif = siniflar()
+    yeni_sinif.teacher_mail = ogretmenin_maili
+    yeni_sinif.room_name = sinif_adi
+    yeni_sinif.set_room()
+    return redirect(url_for("teacherController.teacher"))
 
 
-@teacherController.route('/createassignment')
+@teacherController.route('/updatestudent', methods=["POST"])
+def change_student():
+    pass
+
+
+@teacherController.route('/createassignment', methods=['POST', "GET"])
 def createassignment():
-    return render_template("teacherView/createassignment.html")
+    if request.method == "POST":
+        yeni_odev = assignments()
+        yeni_odev.room_id = session.get("bulunan_oda")
+        yeni_odev.name=request.form["odevadi"]
+        yeni_odev.message=request.form["konu"]
+        yeni_odev.create_assignment()
+        return url_for('teacherController.room', room_id=yeni_odev.room_id)
+
+
+    else:
+        return url_for('teacherController.room', room_id=session.get("bulunan_oda"))
+
+
 
 
 @teacherController.route('/checkassignment')
