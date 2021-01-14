@@ -85,7 +85,7 @@ class students(db.Model):
         db.session.commit()
 
     @classmethod
-    def get_student(self, student_id):
+    def get_student(cls, student_id):
         bulunan_student = students.query.filter_by(student_id=student_id).first()
         if bulunan_student:
             return bulunan_student

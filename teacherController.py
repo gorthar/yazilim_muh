@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, request, session, flash, redirect,
 
 teacherController = Blueprint("teacherController", __name__)
 
-from models.model import teacher as teacher_model, rooms as siniflar, enrolled_rooms,assignments
+from models.model import teacher as teacher_model, rooms as siniflar, enrolled_rooms,assignments,students,submitted_assignments
 
 
 # Bu fonksiyon sayfaya ulaşılması için login olunmasını gerekli kılmaktadır
@@ -91,15 +91,35 @@ def teacher():
 @teacher_login_required
 def room(room_id):
     gelen_sinif = siniflar.get_room(room_id)
-    if gelen_sinif != "Sınıf bulunamadı":  # sınıfın varlığının kontrolü
-        if session.get("teacher_name") == gelen_sinif.teacher_mail:  # öğretmenin tanımladığı sınfın kontrolü
-            siniftaki_ogrenciler=enrolled_rooms.get_students_id_from_room_id(room_id)
+    if gelen_sinif != "Sınıf bulunamadı":                               # sınıfın varlığının kontrolü
+        if session.get("teacher_email") == gelen_sinif.teacher_mail:     # öğretmenin tanımladığı sınf olup olmadığının kontrolü
+            siniftaki_ogrencilerin_idler=enrolled_rooms.get_students_id_from_room_id(room_id)
             sinifin_odevleri=assignments.get_assignments(room_id)
-            for student in siniftaki_ogrenciler:
+            x=0
+            y=0
+            tablo=[]                                                    #öğrencilerin ödevlerinin yapılıp yapılmayacağının listeleneceği tablo
+            for student in siniftaki_ogrencilerin_idler:                #tablonun ilk sütunu öğrenci adı ve numarası
+                ogr= students.get_student(student)
+                ogr_dic={"ogrno":str(ogr.student_id),
+                         "ogradi":ogr.name
+                         }
+                column=[ogr_dic]
+                for odev in sinifin_odevleri:                   
+                    ogrencinin_odevi=submitted_assignments.get_submitted_assignment_by_assignment_and_student(odev.assignment_id,ogr.student_id)
+                    if ogrencinin_odevi!="Öğrenci ödevi teslim etmemiştir.":
+                        ogrencinin_odev_durumu = True                       
+                    else:
+                        ogrencinin_odev_durumu=False
 
-            return render_template("teacherView/room.html", gln_snf=gelen_sinif)
+                    odev_dic = {"ödevno": str(odev.assignment_id),
+                                "teslim": str(ogrencinin_odev_durumu)
+                                }
+                    column.append(odev_dic)
+                tablo.append(column)
 
-    return render_template("teacherView/room.html")
+            return render_template("teacherView/room.html", tablo=tablo, gelen_sinif=gelen_sinif)
+
+    return redirect(url_for("teacherController.teacher"))
 
 
 @teacherController.route('/createroom')
