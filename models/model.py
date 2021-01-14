@@ -67,8 +67,8 @@ class rooms(db.Model):
             return "Sınıf bulunamadı"
 
     def create_key(self):
-        length = 10
-        characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        length = 6
+        characters = "ABCDEFGHIJKLMNOPRSTUVYZ0123456789"
         randoms = [random.choice(characters) for _ in range(length)]
         random_key = "".join(randoms)
         return random_key
@@ -80,7 +80,7 @@ class students(db.Model):
     name = db.Column(db.String(50), nullable=False)
     password = db.Column(db.String(20), nullable=False)
 
-    def set_student(self):
+    def set_student(self,room_id):
         key = ""
         randomkey = rooms()
         while True:
@@ -90,6 +90,11 @@ class students(db.Model):
         self.password = key
         db.session.add(self)
         db.session.commit()
+        students_new_acc=students.query.filter_by(password=self.password).first()
+        new_enrollment=enrolled_rooms()
+        new_enrollment.room_id=room_id
+        new_enrollment.student_id=students_new_acc.student_id
+        new_enrollment.enroll_student()
 
     @classmethod
     def get_student(cls, student_id):
@@ -149,13 +154,13 @@ class assignments(db.Model):
         db.session.commit()
 
     def update_assignment(self):
-        guncellenecek_odev = students.query.filter_by(assignment_id=self.assignment_id).first()
+        guncellenecek_odev = assignments.query.filter_by(assignment_id=self.assignment_id).first()
         guncellenecek_odev.message = self.name
         db.session.commit()
 
     @classmethod
     def get_assignment(cls, assignment_id):
-        aranan_odev = students.query.filter_by(assignment_id=assignment_id).first()
+        aranan_odev = assignments.query.filter_by(assignment_id=assignment_id).first()
         if aranan_odev:
             return aranan_odev
         else:

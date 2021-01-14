@@ -112,7 +112,7 @@ def room(room_id):
                         ogrencinin_odev_durumu = False
 
                     odev_dic = {"ödevno": str(odev.assignment_id),
-                                "teslim": str(ogrencinin_odev_durumu)
+                                "teslim": str(ogrencinin_odev_durumu),
                                 }
                     column.append(odev_dic)
                 tablo.append(column)
@@ -124,13 +124,12 @@ def room(room_id):
 
 @teacherController.route('/addstudent', methods=["POST"])
 def add_student():
-    sinif_adi = request.form["sinif_adi"]
-    ogretmenin_maili = session["teacher_email"]
-    yeni_sinif = siniflar()
-    yeni_sinif.teacher_mail = ogretmenin_maili
-    yeni_sinif.room_name = sinif_adi
-    yeni_sinif.set_room()
-    return redirect(url_for("teacherController.teacher"))
+    yeni_ogrenci=students()
+    yeni_ogrenci.name = request.form["odevadi"]
+    yeni_ogrenci.set_student(session.get("bulunan_oda"))
+    
+
+    return redirect(url_for('teacherController.room', room_id=session.get("bulunan_oda")))
 
 
 @teacherController.route('/updatestudent/<student_id>', methods=["POST"])
@@ -139,7 +138,7 @@ def change_student(student_id):
     if changed_student!="Öğrenci bulunamadı":
         changed_student.name=request.form["adi"]
         changed_student.update_student()
-    return url_for('teacherController.room', room_id=session.get("bulunan_oda"))
+    return  redirect(url_for('teacherController.room', room_id=session.get("bulunan_oda")))
 
 @teacherController.route('/createassignment', methods=['POST', "GET"])
 def createassignment():
@@ -149,18 +148,30 @@ def createassignment():
         yeni_odev.name=request.form["odevadi"]
         yeni_odev.message=request.form["konu"]
         yeni_odev.create_assignment()
-        return url_for('teacherController.room', room_id=yeni_odev.room_id)
+        return redirect(url_for('teacherController.room', room_id=yeni_odev.room_id))
 
 
     else:
-        return url_for('teacherController.room', room_id=session.get("bulunan_oda"))
+        return redirect(url_for('teacherController.room', room_id=session.get("bulunan_oda")))
 
 
 
 
-@teacherController.route('/checkassignment')
-def checkassignment():
-    return render_template("teacherView/checkassignment.html")
+@teacherController.route('/checkassignment/<student_id>/<assignment_id>')
+def checkassignment(student_id,assignment_id):
+    ogr=students.get_student(student_id)
+    odev=assignments.get_assignment(assignment_id)
+    teslim_edilen_odev=submitted_assignments.get_submitted_assignment_by_assignment_and_student(assignment_id, student_id)
+    formatli_tarih=teslim_edilen_odev.delivery_date
+    sayfada_gorulecek_veriler=dict([
+        ("ogrenci_adi", ogr.name),
+        ("odev_adi", odev.name),
+        ("gorsel_path", teslim_edilen_odev.path_of_image),
+        ("teslim_tarihi",formatli_tarih.strftime("%m/%d/%Y, %H:%M:%S"))
+    ])
+
+
+    return render_template("teacherView/checkassignment.html", sayfada_gorulecek_veriler=sayfada_gorulecek_veriler)
 
 
 @teacherController.route('/accinfo')

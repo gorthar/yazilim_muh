@@ -1,1 +1,30 @@
-{% extends "teacherView/tmain.html" %}
+{% extends "teacherView/tmain.html"%}
+
+{% block content %}
+<div class="container text-start" style="margin-top:50px;">
+
+    <div class="d-flex flex-row justify-content-center">
+        <div class="p-2"></div>
+        <div class="p-2">Ödev Sahibi Öğrenci: {{ sayfada_gorulecek_veriler["ogrenci_adi"] }}
+        </div>
+        <div class="p-2"></div>
+    </div>
+    <div class="d-flex flex-row justify-content-center">
+        <div class="p-2"></div>
+        <div class="p-2">Ödev Adı: 	&nbsp;{{ sayfada_gorulecek_veriler["odev_adi"] }}
+        </div>
+        <div class="p-2"></div>
+    </div>
+    <div class="d-flex flex-row justify-content-center">
+        <div class="p-2"></div>
+        <div class="p-2">Teslim Edilen Tarih:	&nbsp;{{
+            sayfada_gorulecek_veriler["teslim_tarihi"] }}
+        </div>
+        <div class="p-2"></div>
+    </div>
+<img src="{{ url_for('static', filename=sayfada_gorulecek_veriler['gorsel_path']) }}" class="img-fluid" >
+
+</div>
+
+
+{% endblock %}
