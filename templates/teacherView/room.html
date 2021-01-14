@@ -33,9 +33,9 @@
     <h1>{{gelen_sinif.room_name}}</h1><!-- Sınıf Adı -->
 </div>
 
-<div class="d-flex" style="margin-top:2rem;">
+<div class="d-flex" style="margin-top:2rem;"><!-- Sınıf Adresi -->
     <div class=" me-auto"><i class="fas fa-school" style="margin-right:0.5rem;"></i>Sınıf Kodu:&nbsp;{{
-        gelen_sinif.generated_address<!-- Sınıf Adresi -->
+        gelen_sinif.generated_address
         }}
     </div>
     <div class=" bg-light text-justify rounded" style="padding:5px; margin-right:10px;">
@@ -88,19 +88,19 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header"><h4 class="modal-title">Öğrenci Bilgileri</h4></div>
-                            <form action="{{url_for('teacherController.room', room_id=session.get('bulunan_oda'))}}"
+                            <form action="{{url_for('teacherController.change_student', student_id=r['ogrno'])}}"
                                   method="POST">
                                 <div class="modal-body">
 
                                     <div class="form-group">
                                         <label>Öğrenci Adı:</label>
-                                        <input type="hidden" name="id" value="{{r['ogradi']}}">
-                                        <input type="text" class="form-control" name="name" value="{{r['ogradi']}}">
+                                        <input type="hidden" name="yok" value="{{r['ogradi']}}">
+                                        <input type="text" class="form-control" name="adi" value="{{r['ogradi']}}">
                                     </div>
                                     <div class="form-group">
                                         <label>Öğrenci Kodu</label>
-                                        <input type="hidden" name="id" value="{{r['ogrpass']}}">
-                                        <input type="text" class="form-control" name="name" value="{{r['ogrpass']}}" disabled>
+                                        <input type="hidden" name="passwd" value="{{r['ogrpass']}}">
+                                        <input type="text" class="form-control" name="passwd" value="{{r['ogrpass']}}" disabled>
                                     </div>
 
 

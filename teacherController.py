@@ -133,10 +133,13 @@ def add_student():
     return redirect(url_for("teacherController.teacher"))
 
 
-@teacherController.route('/updatestudent', methods=["POST"])
-def change_student():
-    pass
-
+@teacherController.route('/updatestudent/<student_id>', methods=["POST"])
+def change_student(student_id):
+    changed_student=students.get_student(student_id)
+    if changed_student!="Öğrenci bulunamadı":
+        changed_student.name=request.form["adi"]
+        changed_student.update_student()
+    return url_for('teacherController.room', room_id=session.get("bulunan_oda"))
 
 @teacherController.route('/createassignment', methods=['POST', "GET"])
 def createassignment():
