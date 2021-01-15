@@ -1,9 +1,9 @@
 import random
-
 from flask_sqlalchemy import SQLAlchemy
-from main import db
-from datetime import datetime
 
+
+from datetime import datetime
+db = SQLAlchemy()
 
 class teacher(db.Model):
     __tablename__ = 'teacherTable'
@@ -90,7 +90,7 @@ class students(db.Model):
         key = ""
         randomkey = rooms()
         while True:
-            key = randomkey.create_key()  # 10 karakterli öğrenci giriş kodu oluşturulur
+            key = randomkey.create_key()  # 6 karakterli öğrenci giriş kodu oluşturulur
             if not key == students.query.filter_by(password=key).first():
                 break
         self.password = key
@@ -103,7 +103,15 @@ class students(db.Model):
         new_enrollment.enroll_student()
 
     @classmethod
-    def get_student(cls, student_id):
+    def get_student_by_password(cls, password):
+        bulunan_student = students.query.filter_by(password=password).first()
+        if bulunan_student:
+            return bulunan_student
+        else:
+            return "Öğrenci bulunamadı"
+
+    @classmethod
+    def get_student_by_id(cls, student_id):
         bulunan_student = students.query.filter_by(student_id=student_id).first()
         if bulunan_student:
             return bulunan_student

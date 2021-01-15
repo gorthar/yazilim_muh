@@ -10,24 +10,35 @@
         <form action="{{url_for('teacherController.accinfo')}}" method="POST">
             <div class="">
                 <h1 class="h3 mb-3 fw-normal ">Hesap Bilgileri</h1>
-
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <div class="alert alert-danger" style="margin-left:1rem;">
+                    {% for message in messages %}
+                    {{ message }}
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% endwith %}
 
                 <label for="inputName" class="visually-hidden">İsim</label>
                 <input type="name" name="inputName" id="inputName" class="form-control assabastir" placeholder="İsim"
-                        required value="{{ session['teacher_name'] }}"
+                       required value="{{ session['teacher_name'] }}"
                        autofocus style="margin-bottom:20px;">
 
                 <label for="inputEmail" class="visually-hidden">Email address</label>
-                <input type="email" name="inputEmail" id="inputEmail" class="form-control assabastir" placeholder="E-posta Adresi"
-                        disabled value="{{ session['teacher_email'] }}"
+                <input type="email" name="inputEmail" id="inputEmail" class="form-control assabastir"
+                       placeholder="E-posta Adresi"
+                       disabled value="{{ session['teacher_email'] }}"
                        style="margin-bottom:20px;">
 
                 <label for="inputPassword" class="visually-hidden">Password</label>
-                <input type="password" name="inputPassword" id="inputPassword" class="form-control assabastir" placeholder="Parola" required
+                <input type="password" name="inputPassword" id="inputPassword" class="form-control assabastir"
+                       placeholder="Parola" required
                        required style="margin-bottom:20px;">
-                <label for="inputPasswordCheck"  class="visually-hidden">Password</label>
-                <input type="password" name="inputPasswordCheck" id="inputPasswordCheck" class="form-control assabastir" placeholder="Parola Tekrar" required
-                        required style="margin-bottom:20px;">
+                <label for="inputPasswordCheck" class="visually-hidden">Password</label>
+                <input type="password" name="inputPasswordCheck" id="inputPasswordCheck" class="form-control assabastir"
+                       placeholder="Parola Tekrar" required
+                       required style="margin-bottom:20px;">
 
                 <button class="w-100 btn btn-lg btn-outline-success" style="" type="submit">
                     Kaydet

@@ -1,12 +1,12 @@
 from flask import Flask, render_template, session
 
-from flask_sqlalchemy import SQLAlchemy
+
 
 
 
 app = Flask(__name__)
 
-db = SQLAlchemy(app)
+
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///models/test.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = "birzamanlarpythonprojesiyaparken"
@@ -18,6 +18,8 @@ app.register_blueprint(studentController)
 from teacherController import teacherController
 app.register_blueprint(teacherController)
 
+from models.model import db
+db.init_app(app)
 
 @app.route('/')
 def index():

@@ -6,8 +6,7 @@
 
     <div class="d-flex flex-row justify-content-center">
         <div class="p-2"></div>
-        <div class="p-2">Hoşgeldin {{session['teacher_name']}}. Son giriş yaptğından bu yana X adet ödev teslim
-            edildi.
+        <div class="p-2">Hoşgeldin {{session['teacher_name']}}.
         </div>
         <div class="p-2"></div>
     </div>
@@ -56,27 +55,27 @@
     <div class="container yazi-yesil">
 
         <div class="row row-cols-1 row-cols-md-5 mb-3 text-center">
-            {% if ogrtn_rooms!="Öğretmenin kayıtlı sınıfı bulunmamaktadır." %}  <!-- gelen öğretmenin kayıtlı sınıfı var mı kontrolü -->
-             {% for row in ogrtn_rooms %}
+              <!-- gelen öğretmenin kayıtlı sınıfı var mı kontrolü -->
+             {% for row in tablo %}
             <div class="col">
                 <div class="card mb-3 shadow-sm">
                     <div class="card-header">
-                        <h4 class="my-0 fw-normal">{{row.room_name}}</h4>
+                        <h4 class="my-0 fw-normal">{{row["sinif_adi"]}}</h4>
                     </div>
                     <div class="card-body">
                         <h1 class="card-title pricing-card-title"></h1>
                         <ul class="list-unstyled mt-3 mb-4">
-                            <li>20 öğrenci</li>
-                            <li>10 ödev</li>
+                            <li>Öğrenci Sayısı:{{row["ogrenci_sayisi"]}}</li>
+                            <li>Ödev Sayısı: {{row["odev_sayisi"]}}</li>
 
                         </ul>
-                        <a class="btn btn-lg w-100 btn-outline-success" href="{{url_for('teacherController.room', room_id=row.room_id)}}" role="button">Sınıfa git</a>
+                        <a class="btn btn-lg w-100 btn-outline-success" href="{{url_for('teacherController.room', room_id=row['sinif_id'])}}" role="button">Sınıfa git</a>
 
                     </div>
                 </div>
             </div>
                 {% endfor %}
-            {% endif %}
+
 
         </div>
     </div>

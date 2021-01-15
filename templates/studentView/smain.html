@@ -6,51 +6,108 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>BADOTS</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-    <style>
-        .is-clickable {
-            cursor: pointer;
-        }
-        .arkaplan{
-            background-color:#209cee;
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
+
+    <style>
+
+    body{
+         color:white;
+          padding-bottom: 40px;
+          background-color: #3498DB;
+    }
+    .bg-yesil{
+        background-color: #3498DB;
+    }
+    .yazi-yesil{
+        color: #3498DB;
+    }
+    .yazi-beyaz{
+     color:#FFFFF !important;
+    }
+    hr {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      border: 1px;
+      border-top: 10px solid rgba(255,255,255, 0);
+      color:white !important;
+    }
+    .btn-outline-success{
+        border-color:#3498DB;
+        color:#3498DB;
+    }
+    .btn-outline-success:hover{
+        background-color: #3498DB;
+        border-color:#3498DB;
+    }
+        @media only screen and (max-width: 600px) {
+          .form-signin {
+          margin:40px;
         }
-        #beyaz{
-            color:white;
         }
+        @media only screen and (max-width: 460px) {
+          .form-signin {
+          margin:-15px;
+        }
+
+        th {
+
+            color: white;
+        }
+        }
+    a.disabled {
+    pointer-events: none;
+    color: white;
+    }
+
     </style>
+
+
 </head>
 <body>
-<section class="hero is-info is-fullheight">
+<section>
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm bg-yesil">
+        <div class="container-fluid">
 
-    <div class="hero-head">
-        <nav class="navbar">
-            <div class="container">
+            <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto ">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page"
+                           href="{{ url_for('studentController.student') }}">Anasayfa</a>
+                    </li>
 
-                <div id="navbarMenuHeroA" class="navbar-menu is-active">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('studentController.slogout') }}">Çıkış</a>
+                    </li>
 
-                    <div class="navbar-end">
-                        <a href="{{ url_for('studentController.student') }}" class="navbar-item">
-                            Anasayfa</a>
-
-
-                        <a href="{{ url_for('studentController.slogout') }}" class="navbar-item">
-                            Çıkış
-                        </a>
-                    </div>
-                </div>
+                </ul>
             </div>
-        </nav>
-    </div>
-
-    <div class="hero-body">
-        <div class="container">
-            {% block content %}
-            {% endblock %}
         </div>
+    </nav>
+
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
     </div>
 </section>
+
+<!--JavaScript Bundle with Popper-->
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
+        integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js"
+        integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

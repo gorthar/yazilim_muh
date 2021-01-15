@@ -80,7 +80,19 @@ def teacher():
     else:
         ogretmen_maili = session["teacher_email"]
         ogretmen_rooms = siniflar.get_rooms(ogretmen_maili)
-        return render_template("teacherView/teacher.html", ogrtn_rooms=ogretmen_rooms)
+        tablo=[]
+        if ogretmen_rooms!="Öğretmenin kayıtlı sınıfı bulunmamaktadır.":
+            for room in ogretmen_rooms:
+                siniftaki_ogrenci_sayisi=enrolled_rooms.get_students_id_from_room_id(room.room_id)
+                odevler=assignments.get_assignments(room.room_id)
+                sutun={
+                    "sinif_adi":room.room_name,
+                    "sinif_id":room.room_id,
+                    "ogrenci_sayisi":len(siniftaki_ogrenci_sayisi),
+                    "odev_sayisi":len(odevler),
+                }
+                tablo.append(sutun)
+        return render_template("teacherView/teacher.html", tablo=tablo)
 
 
 @teacherController.route('/room/<int:room_id>')
@@ -98,7 +110,7 @@ def room(room_id):
             y = 0
             tablo = []  # öğrencilerin ödev durumlarının listeleneceği tablo
             for student in siniftaki_ogrencilerin_idler:  # her satırın ilk hücresi öğrenci adı, id'si ve giriş kodu bilgilerini bulunduran bir dic
-                ogr = students.get_student(student)
+                ogr = students.get_student_by_id(student)
                 ogr_dic = {"ogrno": str(ogr.student_id),
                            "ogradi": ogr.name,
                            "ogrpass": str(ogr.password)
@@ -124,6 +136,7 @@ def room(room_id):
 
 
 @teacherController.route('/addstudent', methods=["POST"])
+@teacher_login_required
 def add_student():
     yeni_ogrenci = students()
     yeni_ogrenci.name = request.form["odevadi"]
@@ -133,6 +146,7 @@ def add_student():
 
 
 @teacherController.route('/updatestudent/<student_id>', methods=["POST"])
+@teacher_login_required
 def change_student(student_id):
     changed_student = students.get_student(student_id)
     if changed_student != "Öğrenci bulunamadı":
@@ -142,6 +156,7 @@ def change_student(student_id):
 
 
 @teacherController.route('/createassignment', methods=['POST', "GET"])
+@teacher_login_required
 def createassignment():
     if request.method == "POST":
         yeni_odev = assignments()
@@ -157,8 +172,9 @@ def createassignment():
 
 
 @teacherController.route('/checkassignment/<student_id>/<assignment_id>')
+@teacher_login_required
 def checkassignment(student_id, assignment_id):
-    ogr = students.get_student(student_id)
+    ogr = students.get_student_by_id(student_id)
     odev = assignments.get_assignment(assignment_id)
     teslim_edilen_odev = submitted_assignments.get_submitted_assignment_by_assignment_and_student(assignment_id,
                                                                                                   student_id)
@@ -174,6 +190,7 @@ def checkassignment(student_id, assignment_id):
 
 
 @teacherController.route('/editassignment', methods=["POST", "GET"])
+@teacher_login_required
 def editassignment():
     if request.method == "POST":
         gelen_odev = assignments()
@@ -188,6 +205,7 @@ def editassignment():
 
 
 @teacherController.route('/deleteassignment/<assignment_id>', methods=["GET"])
+@teacher_login_required
 def deleteassignment(assignment_id):
     silinecek_odev = assignments.get_assignment(assignment_id)
     silinecek_odev.delete_assignment()
@@ -195,6 +213,7 @@ def deleteassignment(assignment_id):
 
 
 @teacherController.route('/accinfo', methods=['POST', "GET"])
+@teacher_login_required
 def accinfo():
     if request.method == "POST":
         parola = request.form["inputPassword"]
@@ -204,18 +223,20 @@ def accinfo():
 
 
         if request.form["inputPassword"] != request.form["inputPasswordCheck"]:
-            flash("Parola bilgileri aynı değil")
+            flash("Parola bilgileri aynı değil!")
 
         else:
             parlosi_yeni_ogretmen = teacher_model(eposta, isim, parola)
             parlosi_yeni_ogretmen.updateTeacher()
             session["teacher_name"]= isim
+            flash("Hesap başarıyla güncellenmiştir.")
         return redirect(url_for("teacherController.accinfo"))
     else:
         return render_template("teacherView/accinfo.html")
 
 
 @teacherController.route('/logout')
+@teacher_login_required
 def logout():
     session.clear()
     return redirect(url_for("index"))
