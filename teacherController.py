@@ -32,6 +32,7 @@ def tlogin():
                 ogretmen_adi = logging_teacher.name
                 session["teacher_name"] = ogretmen_adi
                 session["teacher_email"] = logging_teacher.email
+                session["teacher_password"] = logging_teacher.password
 
                 return redirect(url_for("teacherController.teacher"))
             else:
@@ -124,29 +125,29 @@ def room(room_id):
 
 @teacherController.route('/addstudent', methods=["POST"])
 def add_student():
-    yeni_ogrenci=students()
+    yeni_ogrenci = students()
     yeni_ogrenci.name = request.form["odevadi"]
     yeni_ogrenci.set_student(session.get("bulunan_oda"))
-    
 
     return redirect(url_for('teacherController.room', room_id=session.get("bulunan_oda")))
 
 
 @teacherController.route('/updatestudent/<student_id>', methods=["POST"])
 def change_student(student_id):
-    changed_student=students.get_student(student_id)
-    if changed_student!="Öğrenci bulunamadı":
-        changed_student.name=request.form["adi"]
+    changed_student = students.get_student(student_id)
+    if changed_student != "Öğrenci bulunamadı":
+        changed_student.name = request.form["adi"]
         changed_student.update_student()
-    return  redirect(url_for('teacherController.room', room_id=session.get("bulunan_oda")))
+    return redirect(url_for('teacherController.room', room_id=session.get("bulunan_oda")))
+
 
 @teacherController.route('/createassignment', methods=['POST', "GET"])
 def createassignment():
     if request.method == "POST":
         yeni_odev = assignments()
         yeni_odev.room_id = session.get("bulunan_oda")
-        yeni_odev.name=request.form["odevadi"]
-        yeni_odev.message=request.form["konu"]
+        yeni_odev.name = request.form["odevadi"]
+        yeni_odev.message = request.form["konu"]
         yeni_odev.create_assignment()
         return redirect(url_for('teacherController.room', room_id=yeni_odev.room_id))
 
@@ -155,28 +156,63 @@ def createassignment():
         return redirect(url_for('teacherController.room', room_id=session.get("bulunan_oda")))
 
 
-
-
 @teacherController.route('/checkassignment/<student_id>/<assignment_id>')
-def checkassignment(student_id,assignment_id):
-    ogr=students.get_student(student_id)
-    odev=assignments.get_assignment(assignment_id)
-    teslim_edilen_odev=submitted_assignments.get_submitted_assignment_by_assignment_and_student(assignment_id, student_id)
-    formatli_tarih=teslim_edilen_odev.delivery_date
-    sayfada_gorulecek_veriler=dict([
+def checkassignment(student_id, assignment_id):
+    ogr = students.get_student(student_id)
+    odev = assignments.get_assignment(assignment_id)
+    teslim_edilen_odev = submitted_assignments.get_submitted_assignment_by_assignment_and_student(assignment_id,
+                                                                                                  student_id)
+    formatli_tarih = teslim_edilen_odev.delivery_date
+    sayfada_gorulecek_veriler = dict([
         ("ogrenci_adi", ogr.name),
         ("odev_adi", odev.name),
         ("gorsel_path", teslim_edilen_odev.path_of_image),
-        ("teslim_tarihi",formatli_tarih.strftime("%m/%d/%Y, %H:%M:%S"))
+        ("teslim_tarihi", formatli_tarih.strftime("%m/%d/%Y, %H:%M:%S"))
     ])
-
 
     return render_template("teacherView/checkassignment.html", sayfada_gorulecek_veriler=sayfada_gorulecek_veriler)
 
 
-@teacherController.route('/accinfo')
+@teacherController.route('/editassignment', methods=["POST", "GET"])
+def editassignment():
+    if request.method == "POST":
+        gelen_odev = assignments()
+        gelen_odev.assignment_id = request.form["id"]
+        gelen_odev.name = request.form["odevadi"]
+        gelen_odev.message = request.form["odevkonusu"]
+        gelen_odev.update_assignment()
+        return redirect(url_for('teacherController.editassignment'))
+    else:
+        rooms_assignments = assignments.get_assignments(session.get("bulunan_oda"))
+        return render_template("teacherView/editassignment.html", rooms_assignments=rooms_assignments)
+
+
+@teacherController.route('/deleteassignment/<assignment_id>', methods=["GET"])
+def deleteassignment(assignment_id):
+    silinecek_odev = assignments.get_assignment(assignment_id)
+    silinecek_odev.delete_assignment()
+    return redirect(url_for("teacherController.editassignment"))
+
+
+@teacherController.route('/accinfo', methods=['POST', "GET"])
 def accinfo():
-    return render_template("teacherView/accinfo.html")
+    if request.method == "POST":
+        parola = request.form["inputPassword"]
+        eposta = session["teacher_email"]
+        isim = request.form["inputName"]
+
+
+
+        if request.form["inputPassword"] != request.form["inputPasswordCheck"]:
+            flash("Parola bilgileri aynı değil")
+
+        else:
+            parlosi_yeni_ogretmen = teacher_model(eposta, isim, parola)
+            parlosi_yeni_ogretmen.updateTeacher()
+            session["teacher_name"]= isim
+        return redirect(url_for("teacherController.accinfo"))
+    else:
+        return render_template("teacherView/accinfo.html")
 
 
 @teacherController.route('/logout')

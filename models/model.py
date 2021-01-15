@@ -20,6 +20,12 @@ class teacher(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def updateTeacher(self):
+        updated_teacher = teacher.query.filter_by(email=self.email).first()
+        updated_teacher.name = self.name
+        updated_teacher.password = self.password
+        db.session.commit()
+
     @classmethod
     def getTeacher(self, email):
         bulunan_teacher = teacher.query.filter_by(email=email).first()
@@ -155,7 +161,8 @@ class assignments(db.Model):
 
     def update_assignment(self):
         guncellenecek_odev = assignments.query.filter_by(assignment_id=self.assignment_id).first()
-        guncellenecek_odev.message = self.name
+        guncellenecek_odev.message = self.message
+        guncellenecek_odev.name = self.name
         db.session.commit()
 
     @classmethod
