@@ -1,36 +1,35 @@
 {% extends "studentView/smain.html" %}
 
 {% block content %}
-<div class="column is-9 is-offset-2">
-    <div class="fa-3x">
-        <h1>Kayıtlı Sınıflar</h1>
+
+<div class="container yazi-yesil">
+
+    <div class="row row-cols-1 row-cols-md-5 mb-3 text-center">
+        <!-- gelen öğretmenin kayıtlı sınıfı var mı kontrolü -->
+        {% for row in tablo %}
+        <div class="col">
+            <div class="card mb-3 shadow-sm">
+                <div class="card-header">
+                    <h4 class="my-0 fw-normal">{{row["sinif_adi"]}}</h4>
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title"></h1>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>Öğrenci Sayısı:{{row["ogrenci_sayisi"]}}</li>
+                        <li>Ödev Sayısı: {{row["odev_sayisi"]}}</li>
+
+                    </ul>
+                    <a class="btn btn-lg w-100 btn-outline-success" href="{{url_for('studentController.studentroom')}}"
+                       role="button">Sınıfa git</a>
+                    <!--, room_id=row['sinif_id']-->
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+
     </div>
-    <table class="table is-hoverable  arkaplan has-text-white">
-        <thead>
-
-        <tr >
-            <th>Sınıf Adı</th>
-            <th>Sınıf Öğretmeni</th>
-            <th>Öğretmenin Mesajı</th>
-
-        </tr>
-        </thead>
-
-        <tbody>
-        <tr class="is-clickable "  onclick="window.location='{{ url_for('studentController.studentroom') }}'">
-
-                <th>7/A Bilişim Teknolojileri</th>
-                <th>Ayda Kahraman</th>
-                <th>Derste verilen ödevi lütfen defterde çözüp fotoğrafını çekip sisteme yükleyiniz</th>
-
-        </tr>
-        <tr class="is-clickable " onclick="window.location='{{ url_for('studentController.studentroom') }}'">
-
-                <th>7/A Tarih</th>
-                <th>Ahmet L</th>
-                <th>Sayfa 12 deki test soruları</th>
-
-        </tr>
-        </tbody>
 </div>
+
+
 {% endblock %}
