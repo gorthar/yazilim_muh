@@ -1,39 +1,42 @@
 {% extends "studentView/smain.html" %}
 
 {% block content %}
-<div class="column is-6 is-offset-3">
+<div class="column is-6 is-offset-3" style="margin:auto; margin-top:6rem; max-width:800px; ">
     <div class="fa-3x">
         <h1>Ödevler</h1>
     </div>
-    <table class="table is-hoverable  arkaplan has-text-white">
+    <table class="table arkaplan yazi-beyaz">
         <thead>
 
         <tr>
             <th>Ödev Adı</th>
-            <th>Ödevin Son Teslim Tarihi</th>
+            <th>Açıklama</th>
             <th>Teslim Durumu</th>
 
         </tr>
         </thead>
 
         <tbody>
+        {% for row in tablo %}
         <tr>
 
-            <th>7/A Bilişim Teknolojileri</th>
-            <th>15.05.2021</th>
-            <th class="is-clickable " onclick="window.location='{{ url_for('studentController.submit') }}'"><i
-                    class="far fa-thumbs-up"></i></th>
+            <td>{{row['odevadi']}}</td>
+            <td>{{row['odevmesaj']}}</td>
+            {% if row['teslim']=="True" %}
+
+                    <td class="is-clickable " onclick="window.location='{{ url_for('studentController.submit', assignment_id=row['odevno']) }}'"><i
+                    class="far fa-thumbs-up"></i></td>
+                {% else %}
+                 <td class="is-clickable " onclick="window.location='{{ url_for('studentController.submit', assignment_id=row['odevno']) }}'"><i
+                    class="far fa-thumbs-down"></i></td>
+                {% endif %}
+
 
         </tr>
-        <tr>
+         {% endfor %}
 
-            <th>7/A Tarih</th>
-            <th>15.05.2021</th>
-            <th class="is-clickable " onclick="window.location='{{ url_for('studentController.submit') }}'"><i
-                    class="far fa-thumbs-down"></i></th>
-
-        </tr>
         </tbody>
+    </table>
 </div>
 
 

@@ -2,6 +2,54 @@
 
 {% block content %}
 
+<div class="container card " style="margin:auto; margin-top:8rem; max-width:800px;">
+ <h1 class="h3 mb-3 fw-normal text-center yazi-yesil">Ödev Teslim {{assignment_id}}abc</h1>
 
+
+            <p>
+
+                {% with messages = get_flashed_messages() %}
+                  {% if messages %}
+                 {% for message in messages %}
+                   <div class="alert alert-success">
+                    <strong>{{ message }}</strong>
+                  </div>
+                 {% endfor %}
+                  {% endif %}
+                {% endwith %}
+               </p>
+{{assignment_id}}123
+   <!-- File upload form -->
+   <form method="POST" action="{{ url_for('studentController.submit', assignment_id=assignment_id) }}" enctype="multipart/form-data" class="form-inline">
+    <div class="form-group">
+
+                      <input type="file" name="files[]" id="fileInput" class="form-control col-lg-8" style="margin-bottom:1rem;" multiple >
+
+                 </div>
+                <input type="submit" name="submit" class="btn w-25 btn-lg btn-outline-success float-end" style="margin-bottom:1rem;" value="Yükle"/>
+             </form>
+
+
+
+</div>
+<script>
+$(document).ready(function(){
+ // File type validation
+    $("#fileInput").change(function(){
+        var fileLength = this.files.length;
+        var match= ["image/jpeg","image/png","image/jpg","image/gif"];
+        var i;
+        for(i = 0; i < fileLength; i++){
+            var file = this.files[i];
+            var imagefile = file.type;
+            if(!((imagefile==match[0]) || (imagefile==match[1]) || (imagefile==match[2]) || (imagefile==match[3]))){
+                alert('Please select a valid image file (JPEG/JPG/PNG/GIF).');
+                $("#fileInput").val('');
+                return false;
+            }
+        }
+    });
+});
+</script>
 
 {% endblock %}

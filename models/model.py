@@ -71,6 +71,13 @@ class rooms(db.Model):
             return single_room
         else:
             return "Sınıf bulunamadı"
+    @classmethod
+    def get_room_by_adress(cls, generated_address):
+        room_by_adress=rooms.query.filter_by(generated_address=generated_address).first()
+        if room_by_adress:
+            return room_by_adress
+        else:
+            return "Sınıf Bulunamadı"
 
     def create_key(self):
         length = 6

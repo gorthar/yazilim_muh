@@ -6,7 +6,8 @@ from flask import Flask, render_template, session
 
 app = Flask(__name__)
 
-
+UPLOAD_FOLDER = 'static/'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///models/test.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = "birzamanlarpythonprojesiyaparken"

@@ -2,6 +2,51 @@
 
 {% block content %}
 
+<div class="d-flex flex-row justify-content-center" style="margin-top:5rem;">
+    <div class="p-2"></div>
+    <div class="p-2">Hoşgeldin {{session['student_name']}}.
+    </div>
+    <div class="p-2"></div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade yazi-yesil" id="yenisinif" tabindex="-1" aria-labelledby="yenisiniflabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="yenisiniflabel">Sınıfa Katıl</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{url_for('studentController.student')}}" method="POST">
+                <div class="modal-body">
+
+                    <input type="name" name="sinif_kodu" id="name" class="form-control yazi-yesil assabastir"
+                           placeholder="Sınıf kodu" required
+                           autofocus>
+
+
+                </div>
+                <div class="modal-footer">
+
+                    <button class="btn btn-outline-success" type="submit">Katıl</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex flex-row justify-content-end">
+    <div class="bg-light text-justify rounded" style="padding:5px; ">
+        <p style="margin-top:1px;margin-bottom:1px;font-size:0.6rem;">
+            <a data-bs-toggle="modal" data-bs-target="#yenisinif" href=""><i
+                    class="far fa-plus-square fa-2x yazi-yesil">
+                Sınıfa katıl</i></a>
+        </p>
+    </div>
+</div>
+
+<hr/>
+
 <div class="container yazi-yesil">
 
     <div class="row row-cols-1 row-cols-md-5 mb-3 text-center">
@@ -19,9 +64,9 @@
                         <li>Ödev Sayısı: {{row["odev_sayisi"]}}</li>
 
                     </ul>
-                    <a class="btn btn-lg w-100 btn-outline-success" href="{{url_for('studentController.studentroom')}}"
+                    <a class="btn btn-lg w-100 btn-outline-success" href="{{url_for('studentController.studentroom', room_id=row['sinif_id'] )}}"
                        role="button">Sınıfa git</a>
-                    <!--, room_id=row['sinif_id']-->
+
                 </div>
             </div>
         </div>
